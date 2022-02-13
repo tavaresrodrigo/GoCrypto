@@ -1,13 +1,35 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"reflect"
 )
+
+type Response struct {
+	Status string
+	Code   string
+	Total  int
+	Data   []Coin
+}
+
+type Coin struct {
+	Symbol  string
+	CmcRank float64 `json:"cmc_rank"`
+	Quote   Usd     `json:"quote"`
+}
+
+type Usd struct {
+	Usd Price `json:"USD"`
+}
+type Price struct {
+	Price float64 `json:"price"`
+}
 
 func captureHeader() string {
 	cmk := os.Getenv("ccVar")
@@ -15,9 +37,11 @@ func captureHeader() string {
 }
 
 func main() {
+
+	// Api authentication.
 	cmkValue := captureHeader()
 	client := &http.Client{}
-	serverUrl := "https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
+	serverUrl := "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 	req, err := http.NewRequest("GET", serverUrl, nil)
 	if err != nil {
 		log.Print(err)
@@ -26,7 +50,7 @@ func main() {
 
 	q := url.Values{}
 	q.Add("start", "1")
-	q.Add("limit", "5000")
+	q.Add("limit", "50")
 	q.Add("convert", "USD")
 
 	req.Header.Set("Accepts", "application/json")
@@ -34,12 +58,22 @@ func main() {
 	req.URL.RawQuery = q.Encode()
 
 	resp, err := client.Do(req)
+	println(resp)
+
 	if err != nil {
 		fmt.Println("Error sending request to server")
 		os.Exit(1)
 	}
-	fmt.Println(resp.Status)
-	respBody, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println(string(respBody))
+
+	respBody, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		fmt.Println("Error reading response Body")
+		os.Exit(1)
+	}
+
+	data := Response{}
+	json.Unmarshal(respBody, &data)
+	fmt.Println(reflect.TypeOf(data))
 
 }
