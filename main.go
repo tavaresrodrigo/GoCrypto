@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"reflect"
+	"strconv"
 )
 
 type Response struct {
@@ -36,7 +37,11 @@ func captureHeader() string {
 	return cmk
 }
 
+var coinOnDashboard = make([]map[string]string, 0)
+
 func main() {
+
+	greetUsers()
 
 	// Api authentication.
 	cmkValue := captureHeader()
@@ -58,7 +63,6 @@ func main() {
 	req.URL.RawQuery = q.Encode()
 
 	resp, err := client.Do(req)
-	println(resp)
 
 	if err != nil {
 		fmt.Println("Error sending request to server")
@@ -77,3 +81,27 @@ func main() {
 	fmt.Println(reflect.TypeOf(data))
 
 }
+
+// Function to add coins to the dashboard
+func addCoin(coinSymbol string, coinAmount float64) {
+
+	var userData = make(map[string]string)
+	userData["coinSymbol"] = coinSymbol
+	userData["Amount"] = strconv.FormatFloat(coinAmount, 'f', 2, 64)
+
+	for {
+		fmt.Print(`Inform the COIN symbol you want to add, ex: "BTC" for Bitcoin`)
+		coinOnDashboard = append(coinOnDashboard, userData)
+		fmt.Printf("Coin added to the map, there are all your coins being monitored: %v\n", coinOnDashboard)
+	}
+
+}
+
+// Function to great users and show the main dashboard
+
+func greetUsers() {
+	fmt.Printf("Welcome to CommandCoin! Monitore your crypto assests from your terminal")
+
+}
+
+// TODO Create loop to iterate data.
