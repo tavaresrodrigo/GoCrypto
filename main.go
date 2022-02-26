@@ -1,17 +1,22 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"reflect"
 )
 
 func captureHeader() string {
-	cmk := os.Getenv("ccVar")
+	cmk := os.Getenv("CMMKVALUE")
 	return cmk
+}
+
+type coinInfo struct {
+	name 		string
+	coinRanking float64
 }
 
 func main() {
@@ -19,7 +24,7 @@ func main() {
 }
 
 func fetchData() {
-
+	var fetchdCoins[]coinInfo
 	// Api authentication .
 	cmkValue := captureHeader()
 	client := &http.Client{}
@@ -47,7 +52,20 @@ func fetchData() {
 		os.Exit(1)
 	}
 
-	fmt.Println(respBody)
-	fmt.Printf("respBody variable type: %s\n\n", reflect.TypeOf(respBody))
+	var jsonData interface{}
+	err = json.Unmarshal([]byte(respBody), &jsonData) // here!
+	if err != nil {
+		fmt.Printf("%T\n%s\n%#v\n", err, err, err)
+	}
 
+	allCoins := jsonData.(map[string]interface{})
+	allCoinsData := allCoins["data"]
+	allCoinsDataList := allCoinsData.([]interface{})
+
+	for _, coins := range allCoinsDataList {
+		coinMap := coins.(map[string]interface{})
+		coin := coinInfo{name: coinMap["name"].(string), coinRanking: coinMap["cmc_rank"].(float64)}
+		fetchdCoins = append(fetchdCoins, coin)
+	}
+	fmt.Println(fetchdCoins)
 }
