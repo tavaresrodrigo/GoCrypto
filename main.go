@@ -75,7 +75,6 @@ func fetchData() {
 
     }
 
-
 }
 
 func captureHeader() string {
