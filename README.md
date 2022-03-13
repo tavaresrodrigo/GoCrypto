@@ -1,5 +1,5 @@
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)]
-[![Contributors](https://img.shields.io/github/contributors/tavaresrodrigo/GoCrypto.svg)
+![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
+![Contributors](https://img.shields.io/github/contributors/tavaresrodrigo/GoCrypto.svg)
 
 # GoCrypto
 
