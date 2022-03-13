@@ -1,23 +1,5 @@
-<p>
-  <a
-    href="https://github.com/tavaresrodrigo/GoCrypto/blob/master/LICENSE"
-    target="_blank"
-  >
-    <img
-      src="https://img.shields.io/badge/license-Apache--2.0"
-      alt="goCrypto is released under the  Apache License Version 2.0, January 2004"
-    />
-  </a>
-  <a
-    href="https://github.com/tavaresrodrigo/GoCrypto/graphs/contributors"
-    target="_blank"
-  >
-    <img
-      alt="Contributors"
-      src="https://img.shields.io/github/contributors/tavaresrodrigo/GoCrypto.svg"
-    />
-  </a>
-</p>
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)]
+[![Contributors](https://img.shields.io/github/contributors/tavaresrodrigo/GoCrypto.svg)
 
 # GoCrypto
 
