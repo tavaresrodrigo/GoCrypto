@@ -45,6 +45,18 @@
           "market_cap_dominance": 615,
           "fully_diluted_market_cap": 0.5696784250977331,
           "last_updated": "2022-02-13T11:04:29.569Z"
+        },
+        "EUR": {
+          "price": 0.4311539426938784,
+          "volume_24h": 1370,
+          "volume_change_24h": 0.9049521287757649,
+          "percent_change_1h": 0.4042039680598162,
+          "percent_change_24h": 0.8046003939399708,
+          "percent_change_7d": 0.14359647699401767,
+          "market_cap": 0.3786092446317326,
+          "market_cap_dominance": 615,
+          "fully_diluted_market_cap": 0.5696784250977331,
+          "last_updated": "2022-02-13T11:04:29.569Z"
         }
       }
     },
@@ -154,6 +166,7 @@
       ],
       "platform": null,
       "quote": {
+        "EUR" : 1.0,
         "USD": {
           "price": 0.787345585413106,
           "volume_24h": 4634,

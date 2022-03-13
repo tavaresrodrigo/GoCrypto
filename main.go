@@ -9,23 +9,31 @@ import (
 	"os"
 )
 
-func captureHeader() string {
-	cmk := os.Getenv("CMMKVALUE")
-	return cmk
+
+type Coinsdata struct {
+	Data []Coins `json:"data"`
 }
 
-type coinInfo struct {
-	name 		string
-	coinRanking float64
+type Coins struct {
+	Name string 
+	Cmc_rank int 
+	Quote Quotes `json:"quote"`
+}
+
+type Quotes struct {
+	USD Prices `json:"USD"`
+}
+
+type Prices struct {
+	Price float64 `json:"price"`
 }
 
 func main() {
-	fetchData()
+	fetchData() 	
 }
 
 func fetchData() {
-	var fetchdCoins[]coinInfo
-	// Api authentication .
+	// Api authentication
 	cmkValue := captureHeader()
 	client := &http.Client{}
 	serverUrl := "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
@@ -52,20 +60,25 @@ func fetchData() {
 		os.Exit(1)
 	}
 
-	var jsonData interface{}
-	err = json.Unmarshal([]byte(respBody), &jsonData) // here!
+	var coinsData Coinsdata
+	err = json.Unmarshal([]byte(respBody), &coinsData) 
 	if err != nil {
 		fmt.Printf("%T\n%s\n%#v\n", err, err, err)
 	}
 
-	allCoins := jsonData.(map[string]interface{})
-	allCoinsData := allCoins["data"]
-	allCoinsDataList := allCoinsData.([]interface{})
+	fmt.Println(coinsData)
 
-	for _, coins := range allCoinsDataList {
-		coinMap := coins.(map[string]interface{})
-		coin := coinInfo{name: coinMap["name"].(string), coinRanking: coinMap["cmc_rank"].(float64)}
-		fetchdCoins = append(fetchdCoins, coin)
-	}
-	fmt.Println(fetchdCoins)
+	for i := 0; i < len(coinsData.Data); i++ {
+        fmt.Println("Ranking: " , coinsData.Data[i].Cmc_rank)
+		fmt.Println("Name: " , coinsData.Data[i].Name)
+		fmt.Println("Price: " , coinsData.Data[i].Quote.USD.Price)
+
+    }
+
+
+}
+
+func captureHeader() string {
+	cmk := os.Getenv("CMMKVALUE")
+	return cmk
 }
