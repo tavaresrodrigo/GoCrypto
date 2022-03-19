@@ -7,17 +7,17 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"text/tabwriter"
 )
-
 
 type Coinsdata struct {
 	Data []Coins `json:"data"`
 }
 
 type Coins struct {
-	Name string 
-	Cmc_rank int 
-	Quote Quotes `json:"quote"`
+	Name     string
+	Cmc_rank int
+	Quote    Quotes `json:"quote"`
 }
 
 type Quotes struct {
@@ -29,7 +29,7 @@ type Prices struct {
 }
 
 func main() {
-	fetchData() 	
+	fetchData()
 }
 
 func fetchData() {
@@ -61,20 +61,18 @@ func fetchData() {
 	}
 
 	var coinsData Coinsdata
-	err = json.Unmarshal([]byte(respBody), &coinsData) 
+	err = json.Unmarshal([]byte(respBody), &coinsData)
 	if err != nil {
 		fmt.Printf("%T\n%s\n%#v\n", err, err, err)
 	}
 
-	fmt.Println(coinsData)
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	defer w.Flush()
+	fmt.Fprintln(w, "Ranking\tName\tPrice\t")
 
-	for i := 0; i < len(coinsData.Data); i++ {
-        fmt.Println("Ranking: " , coinsData.Data[i].Cmc_rank)
-		fmt.Println("Name: " , coinsData.Data[i].Name)
-		fmt.Println("Price: " , coinsData.Data[i].Quote.USD.Price)
-
-    }
-
+	for _, data := range coinsData.Data {
+		fmt.Fprintf(w, "%d\t%s\t%f\t\n", data.Cmc_rank, data.Name, data.Quote.USD.Price)
+	}
 }
 
 func captureHeader() string {
