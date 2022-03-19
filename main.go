@@ -44,7 +44,7 @@ func fetchData() {
 		log.Print(err)
 		os.Exit(1)
 	}
-	
+
 	buildRequest(req)
 
 	resp, errClient := client.Do(req)
@@ -93,9 +93,9 @@ func buildRequest(req *http.Request) {
 	flag.Parse()
 
 	// Converting from *int to string in order to build query parameter
-	test := strconv.Itoa(*list)
+	coinsLimit := strconv.Itoa(*list)
 
 	q := req.URL.Query()
-	q.Add("limit", test)
+	q.Add("limit", coinsLimit)
 	req.URL.RawQuery = q.Encode()
 }
