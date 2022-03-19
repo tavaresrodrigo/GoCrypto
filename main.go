@@ -36,16 +36,16 @@ func main() {
 }
 
 func fetchData() {
-	// Api authentication
 	client := &http.Client{}
+
 	serverUrl := "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 	req, err := http.NewRequest("GET", serverUrl, nil)
 	if err != nil {
 		log.Print(err)
 		os.Exit(1)
 	}
-
-	buildQuery(req)
+	
+	buildRequest(req)
 
 	resp, errClient := client.Do(req)
 
@@ -81,7 +81,8 @@ func captureHeader() string {
 	return cmk
 }
 
-func buildQuery(req *http.Request) {
+func buildRequest(req *http.Request) {
+	// Api authentication
 	cmkValue := captureHeader()
 
 	req.Header.Set("Accepts", "application/json")
@@ -91,6 +92,7 @@ func buildQuery(req *http.Request) {
 	list := flag.Int("list", 20, "the number of coins to be listed")
 	flag.Parse()
 
+	// Converting from *int to string in order to build query parameter
 	test := strconv.Itoa(*list)
 
 	q := req.URL.Query()
