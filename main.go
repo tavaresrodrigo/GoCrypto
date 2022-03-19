@@ -2,16 +2,19 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"text/tabwriter"
 )
 
 type Coinsdata struct {
 	Data []Coins `json:"data"`
+	list int
 }
 
 type Coins struct {
@@ -34,7 +37,6 @@ func main() {
 
 func fetchData() {
 	// Api authentication
-	cmkValue := captureHeader()
 	client := &http.Client{}
 	serverUrl := "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 	req, err := http.NewRequest("GET", serverUrl, nil)
@@ -43,8 +45,7 @@ func fetchData() {
 		os.Exit(1)
 	}
 
-	req.Header.Set("Accepts", "application/json")
-	req.Header.Add("X-CMC_PRO_API_KEY", cmkValue)
+	buildQuery(req)
 
 	resp, errClient := client.Do(req)
 
@@ -78,4 +79,21 @@ func fetchData() {
 func captureHeader() string {
 	cmk := os.Getenv("CMMKVALUE")
 	return cmk
+}
+
+func buildQuery(req *http.Request) {
+	cmkValue := captureHeader()
+
+	req.Header.Set("Accepts", "application/json")
+	req.Header.Add("X-CMC_PRO_API_KEY", cmkValue)
+
+	// Getting the data passed from the cli parameters
+	list := flag.Int("list", 20, "the number of coins to be listed")
+	flag.Parse()
+
+	test := strconv.Itoa(*list)
+
+	q := req.URL.Query()
+	q.Add("limit", test)
+	req.URL.RawQuery = q.Encode()
 }
